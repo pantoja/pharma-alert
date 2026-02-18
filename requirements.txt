@@ -1,0 +1,7 @@
+scrapling
+curl-cffi
+playwright
+browserforge
+python-dotenv
+selectolax
+httpx

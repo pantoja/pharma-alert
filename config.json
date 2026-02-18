@@ -1,0 +1,13 @@
+{
+    "cep": "51021-130",
+    "products": [
+        {
+            "name": "Dienogeste",
+            "search_term": "dienogeste",
+            "required_terms": [
+                "2mg"
+            ],
+            "threshold_price": 25.0
+        }
+    ]
+}

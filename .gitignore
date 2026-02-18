@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.monitor.env
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# No ignore prices.db porque o plano especifica commitar o histórico no repositório via GitHub Actions
+# Mas se você mudar de ideia e não quiser o banco no git, basta adicionar 'prices.db' aqui.
