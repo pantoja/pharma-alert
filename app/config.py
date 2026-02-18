@@ -2,7 +2,7 @@ import os
 import json
 from dotenv import load_dotenv
 
-env_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
+env_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "monitor.env")
 load_dotenv(env_path)
 
 class Config:

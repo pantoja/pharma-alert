@@ -23,9 +23,18 @@ Ele considera kits ("leve mais por menos") e custos de frete, salvando o histór
    Crie um arquivo `monitor.env` baseado no `.env.example` com suas credenciais de e-mail (Ex: Senha de aplicativo do Gmail). O projeto usa `monitor.env` para evitar conflitos de permissão em alguns ambientes macOS.
 
 4. **GitHub Actions**:
-   Para rodar automaticamente no GitHub:
-   - Vá em `Settings > Secrets and variables > Actions` no seu repositório.
-   - Adicione os secrets: `SMTP_SERVER`, `SMTP_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_TO`.
+    O projeto está configurado para rodar automaticamente via GitHub Actions:
+    - **CI**: Valida o código em cada push/pull request.
+    - **Run Scraper**: Executa o monitoramento diariamente (09:00 UTC) e pode ser disparado manualmente.
+
+    Para configurar a automação:
+    1. Vá em `Settings > Secrets and variables > Actions`.
+    2. Adicione os seguintes Secrets:
+       - `SMTP_SERVER`: Servidor SMTP (ex: `smtp.gmail.com`).
+       - `SMTP_PORT`: Porta SMTP (ex: `587`).
+       - `EMAIL_USER`: Seu e-mail de envio.
+       - `EMAIL_PASS`: Senha de aplicativo (App Password).
+       - `EMAIL_TO`: E-mail que receberá os alertas.
 
 ## Estrutura do Projeto
 
@@ -34,4 +43,5 @@ Ele considera kits ("leve mais por menos") e custos de frete, salvando o histór
 - `app/database.py`: Gerenciamento do histórico (SQLite).
 - `app/notifier.py`: Envio de e-mails.
 - `app/config.py`: Carregamento de configurações.
-- `.github/workflows/main.yml`: Automação 2x ao dia.
+- `.github/workflows/ci.yml`: Workflow de Integração Contínua.
+- `.github/workflows/run_scraper.yml`: Workflow de execução agendada.
