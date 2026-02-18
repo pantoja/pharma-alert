@@ -18,6 +18,8 @@ Ele considera kits ("leve mais por menos") e custos de frete, salvando o histór
 
 2. **Produtos e Alvos**:
    Edite o arquivo `config.json` para adicionar seus medicamentos, termos de busca e o preço unitário alvo.
+   - O sistema evita enviar notificações duplicadas se o preço e a farmácia da melhor oferta forem os mesmos do último alerta.
+   - Você pode pausar notificações de um produto adicionando o campo `"snooze_until": "AAAA-MM-DD"`. O sistema não enviará alertas até essa data.
    
 3. **Variáveis de Ambiente**:
    Crie um arquivo `monitor.env` baseado no `.env.example` com suas credenciais de e-mail (Ex: Senha de aplicativo do Gmail). O projeto usa `monitor.env` para evitar conflitos de permissão em alguns ambientes macOS.

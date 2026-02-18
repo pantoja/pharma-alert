@@ -22,24 +22,30 @@ class Database:
                     total_effective_price REAL,
                     is_kit BOOLEAN,
                     kit_size INTEGER,
-                    is_best_offer BOOLEAN
+                    is_best_offer BOOLEAN,
+                    notified BOOLEAN DEFAULT 0
                 )
             """)
             # Tenta adicionar a coluna total_price caso a tabela já exista sem ela
             try:
                 cursor.execute("ALTER TABLE price_history ADD COLUMN total_price REAL")
             except sqlite3.OperationalError:
-                pass # Coluna já existe ou tabela nova
+                pass 
+
+            try:
+                cursor.execute("ALTER TABLE price_history ADD COLUMN notified BOOLEAN DEFAULT 0")
+            except sqlite3.OperationalError:
+                pass
             conn.commit()
 
-    def save_price(self, pharmacy, product_name, unit_price, total_price, shipping_cost, total_effective_price, is_kit=False, kit_size=1, is_best_offer=False):
+    def save_price(self, pharmacy, product_name, unit_price, total_price, shipping_cost, total_effective_price, is_kit=False, kit_size=1, is_best_offer=False, notified=False):
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT INTO price_history 
-                (timestamp, pharmacy, product_name, unit_price, total_price, shipping_cost, total_effective_price, is_kit, kit_size, is_best_offer)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (datetime.now(), pharmacy, product_name, unit_price, total_price, shipping_cost, total_effective_price, is_kit, kit_size, is_best_offer))
+                (timestamp, pharmacy, product_name, unit_price, total_price, shipping_cost, total_effective_price, is_kit, kit_size, is_best_offer, notified)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (datetime.now(), pharmacy, product_name, unit_price, total_price, shipping_cost, total_effective_price, is_kit, kit_size, is_best_offer, notified))
             conn.commit()
 
     def get_last_price(self, pharmacy, product_name):
@@ -52,3 +58,20 @@ class Database:
             """, (pharmacy, product_name))
             result = cursor.fetchone()
             return result[0] if result else None
+
+    def get_last_notified_offer(self, product_name):
+        """
+        Retorna a farmácia e o preço efetivo total do último alerta enviado para este produto.
+        Serve para evitar envios duplicados se nada mudou.
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT pharmacy, total_effective_price FROM price_history 
+                WHERE product_name = ? AND notified = 1
+                ORDER BY timestamp DESC LIMIT 1
+            """, (product_name,))
+            result = cursor.fetchone()
+            if result:
+                return {"pharmacy": result[0], "price": result[1]}
+            return None
